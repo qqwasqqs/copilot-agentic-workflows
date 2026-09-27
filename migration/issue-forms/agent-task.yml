@@ -1,0 +1,255 @@
+name: Agent Task (Atomic)
+description: A bounded task for Copilot agent mode
+title: "[Atomic] <action> <object> (<area>)"
+labels: ["agent", "atomic"]
+# projects: ["your-org/123"]   # optional
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Authoring Help
+        Use the Agent Task Authoring Guide (.github/instructions/agent-task.authoring.md) plus guardrails:
+        - Backend guardrails: .github/instructions/backend.instructions.md
+        - Infra guardrails (if infra paths included): .github/instructions/infrastructure.instructions.md
+        - Personas & selection rules: AGENTS.md
+        - Copilot guidance: .github/copilot-instructions.md
+        - Constitution: .spec/constitution.md (if present)
+
+        Checklist before submit:
+        - Main Issue Link points to a single Feature Brief (include section anchors in Context / Links).
+        - Context / Links cites exact sections (e.g., § API/UX Contracts, § NFR) + guardrails.
+        - Affected Paths split into Modify vs Reference Only; Modify uses 4–8 specific files/globs (avoid broad src/**).
+        - Files / Symbols to Touch list every file with action (Add/Edit/Delete) + explicit symbols; nothing extra.
+        - Allowed vs Forbidden Changes constrains blast radius (no new deps / infra unless allowed).
+        - Contracts to Honor copied (types, error codes, pagination, auth).
+        - Objective (DoD) is 3–6 testable checkboxes (resolver/service/tests/observability).
+        - Technical Details list constraints (perf, no scans, conditional writes) + intentional side effects.
+        - Observability Hooks specify logger fields, metrics names, tracing annotations (no PII).
+        - Test Data & Verification Steps include fixtures, exact commands, expected results.
+        - Security / Privacy Checks acknowledge validation, authz, no secrets/PII, non-leaky errors.
+        - PR Boundaries define include vs exclude; Diff Size usually Small.
+        - Any need outside Modify paths or beyond Files/Symbols must be ASKED before action.
+        - Keep atomic: ideally results in a single PR.
+
+        Unknown or missing info? Add questions to the Feature Brief’s Open Questions (not here) and mark [tbd] in this task where necessary.
+
+  - type: input
+    id: main_issue
+    attributes:
+      label: Main Issue Link
+      description: Paste the main Feature Brief issue number or URL.
+      placeholder: "#1234"
+    validations: { required: true }
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context / Links
+      description: Link to exact sections in the main issue and guardrails.
+      placeholder: |
+        - Main spec sections: #1234 § API/UX Contracts, § Non-Functional
+        - Guardrails: .spec/constitution.md
+        - Coding rules: .github/copilot-instructions.md
+        - Personas: AGENTS.md
+    validations: { required: true }
+
+  - type: textarea
+    id: affected_paths
+    attributes:
+      label: Affected Paths (Scope Gate)
+      description: Paths the agent may MODIFY (edit/create) vs only READ for context. Stay inside Modify. If something outside is needed, ASK first.
+      placeholder: |
+        Modify:
+        - resolvers/trainers/**
+        - services/trainers.service.ts
+        - data-access/trainers/**
+        - tests/resolvers/trainers/**
+        Reference Only:
+        - graphql/schema.graphql
+        - .github/instructions/backend.instructions.md
+        - AGENTS.md
+    validations: { required: true }
+
+  - type: textarea
+    id: files_symbols
+    attributes:
+      label: Files / Symbols to Touch (Authoritative)
+      description: Bullet each file & symbol with action. Agent MUST ask before going beyond this list.
+      placeholder: |
+        Files:
+        - Edit: services/trainers.service.ts – add getTrainerByEmail()
+        - Add: resolvers/trainers/listTrainers.ts – new resolver
+        - Add: tests/resolvers/listTrainers.spec.ts – pagination & error cases
+        - Edit: graphql/schema.graphql – add listTrainers query & TrainerConnection
+        Symbols:
+        - TrainerService.getTrainerByEmail (new)
+        - listTrainers resolver function
+        - TrainerConnection type
+    validations: { required: true }
+
+  - type: textarea
+    id: allowed_forbidden
+    attributes:
+      label: Allowed vs Forbidden Changes
+      description: Limit blast radius explicitly.
+      placeholder: |
+        Allowed:
+        - Add new resolver files under resolvers/trainers/
+        - Extend existing service methods (no broad refactors)
+        - Add tests under tests/resolvers/trainers/
+        Forbidden:
+        - Introduce new npm dependencies
+        - Modify infrastructure (amplify/**, infra/**)
+        - Change unrelated services or global config
+        - Remove existing public APIs
+    validations: { required: true }
+
+  - type: textarea
+    id: contracts_alignment
+    attributes:
+      label: Contracts to Honor
+      description: Copy key type names, error codes, pagination rules, auth expectations from main issue.
+      placeholder: |
+        - Types: Trainer, TrainerConnection, TrainerInput
+        - Errors: 400 invalid input; 409 duplicate email; 404 not found
+        - Pagination: nextToken pattern; max page size 50
+        - Auth: must verify identity context before CRUD
+    validations: { required: true }
+
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective (Definition of Done)
+      placeholder: |
+        **DoD**
+        - [ ] listTrainers resolver implemented
+        - [ ] Service method added with batching
+        - [ ] Tests (unit + integration) pass
+        - [ ] No forbidden changes
+        - [ ] Observability hooks added (logger/metrics/tracing)
+    validations: { required: true }
+
+  - type: textarea
+    id: technical
+    attributes:
+      label: Technical Details
+      description: Exact constraints & side effects.
+      placeholder: |
+        **Constraints**
+        - TypeScript strict; ESLint clean; Prettier format
+        - No new deps; perf budget: P95 ≤ 150ms
+        - DynamoDB queries only (no scans in hot path)
+        - Conditional writes where needed
+        **Side Effects**
+        - Adds pagination logic
+        - Adds new metrics counters
+    validations: { required: true }
+
+  - type: textarea
+    id: observability
+    attributes:
+      label: Observability Hooks
+      description: Logging/metrics/tracing you will add or update.
+      placeholder: |
+        - Logger: structured JSON with requestId
+        - Metrics: trainer.list.success / trainer.list.failure
+        - Tracing: annotate with specialization filter
+        - No PII in logs
+    validations: { required: true }
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Depends On / Blocks
+      description: Link sub-issues this task depends on or will unblock.
+      placeholder: |
+        Depends on: #<id> (schema addition)
+        Blocks: #<id> (UI integration)
+        None
+
+  - type: textarea
+    id: test_data
+    attributes:
+      label: Test Data & Verification Steps
+      description: Sample fixtures, seed scripts, and commands to run.
+      placeholder: |
+        Fixtures:
+        - 3 trainers with different specializations
+        - 1 inactive trainer
+        Verification Commands:
+        - npm run test -- tests/resolvers/listTrainers.spec.ts
+        - curl -X POST <graphql-endpoint> -d '{query:"{ listTrainers(limit:2){ items { id } nextToken } }"}'
+        Expected:
+        - nextToken present when more than limit results
+        - inactive trainer excluded
+    validations: { required: true }
+
+  - type: dropdown
+    id: diff_size
+    attributes:
+      label: Expected Diff Size
+      description: Keep atomic; prefer Small.
+      options:
+        - Small (≤ 80 lines)
+        - Medium (81-200 lines)
+        - Large (>200 lines; requires prior plan approval)
+      default: 0
+
+  - type: textarea
+    id: pr_boundaries
+    attributes:
+      label: PR Boundaries
+      description: What will be included/excluded in the PR.
+      placeholder: |
+        Include:
+        - Resolver file + service edits + tests + metrics
+        Exclude:
+        - Unrelated refactors; infra changes; dependency upgrades
+
+  - type: textarea
+    id: security_privacy
+    attributes:
+      label: Security / Privacy Checks
+      description: Acknowledge critical guardrails.
+      placeholder: |
+        - No secrets or PII in logs
+        - Input validation present
+        - Authorization enforced using identity context
+        - Error messages non-leaky
+        - Idempotency (if writes)
+
+  - type: dropdown
+    id: rollout_nature
+    attributes:
+      label: Roll-forward Nature
+      description: Clarify if rollback planning needed.
+      options:
+        - Additive (roll-forward only)
+        - Migration (needs rollback plan)
+        - Risky (extra review required)
+      default: 0
+
+  - type: textarea
+    id: tests
+    attributes:
+      label: Tests & Validation
+      description: What to test and high-level verification.
+      placeholder: |
+        - Unit: service methods
+        - Integration: resolver + DynamoDB local
+        - Performance: list with 1000 trainers
+        - All Jest suites green
+    validations: { required: true }
+
+  - type: textarea
+    id: agent_instructions
+    attributes:
+      label: Agent Instructions
+      value: |
+        - If diff > 30 lines or touching public API, propose plan then apply.
+        - Stay within Modify paths; do NOT change Reference Only files.
+        - Do NOT go beyond Files / Symbols list without asking.
+        - Iterate until tests pass; summarize diff before apply.
+        - When opening a PR: prefill the body with .github/pull_request_template.md and complete all sections (N/A where not applicable). Link the main Feature Brief.
+        - Open PR with checklist and test evidence.
+        

@@ -1,0 +1,47 @@
+name: Maintainer Task
+description: Higher-logic sub-issue reserved for maintainers
+title: "[Maintainer] <action> <component> (<area>)"
+labels: ["maintainer", "needs-design"]
+assignees:
+  - your-username
+# projects: ["your-org/123"]   # optional
+body:
+  - type: input
+    id: main_issue
+    attributes:
+      label: Main Issue Link
+      placeholder: "#1234"
+
+  - type: textarea
+    id: background
+    attributes:
+      label: Background / Rationale
+      placeholder: Why this matters; alternatives considered.
+    validations: { required: true }
+
+  - type: textarea
+    id: design
+    attributes:
+      label: Design / Plan
+      description: Interfaces, data model, contracts, rollout/flags.
+      placeholder: |
+        - Approach:
+        - Public types/APIs:
+        - Data model/migration:
+        - Risks & mitigations:
+    validations: { required: true }
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations: { required: true }
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes / Follow-ups
+      placeholder: Links to ADRs, diagrams, spikes.

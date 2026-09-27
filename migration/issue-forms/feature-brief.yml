@@ -1,0 +1,225 @@
+name: Feature Brief (Main Issue)
+description: Single source of truth for a feature
+title: "Feature: <name>"
+labels: ["enhacement"]
+# projects: ["your-org/123"]   # optional
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Authoring Help
+        Use the [Feature Brief Authoring Guide](../instructions/feature-brief.authoring.md) plus guardrails:
+        - Backend: [.github/instructions/backend.instructions.md](../instructions/backend.instructions.md)
+        - Infra: [.github/instructions/infrastructure.instructions.md](../instructions/infrastructure.instructions.md)
+        - Personas: [AGENTS.md](../../AGENTS.md)
+        - Copilot guidance: [.github/copilot-instructions.md](../../.github/copilot-instructions.md)
+
+        Checklist before submit:
+        - Contracts use fenced code blocks & list error codes.
+        - Scope vs Out of Scope is explicit (prevents creep).
+        - Affected Modules / Files are repo‑relative and not overly broad.
+        - NFRs are measurable (latency, throughput, security).
+        - Open Questions include all unknowns; answered items moved under Answered.
+        - Acceptance Criteria: 5–8 testable checkboxes (feature-level only).
+        - Sub-issue Index uses [human] / [agent] / [tbd] labels.
+        Unknowns → mark `[tbd]` and log a question instead of guessing.
+
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Rationale & Goals
+      description: Why we're doing this and what success looks like.
+    validations: { required: true }
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope / Out of Scope
+      description: Boundaries to prevent scope creep.
+      placeholder: |
+        In scope:
+        - ...
+        Out of scope:
+        - ...
+    validations: { required: true }
+
+  - type: textarea
+    id: contracts
+    attributes:
+      label: API/UX Contracts (authoritative)
+      description: Endpoints, payloads, examples, UI states, error codes.
+      placeholder: |
+        ### API
+        GET /api/... -> { ... }
+        Errors: 400, 429, 5xx (retry-after)
+        ### UX
+        States: idle/loading/success/error
+        Keyboard: tab/shift+tab, arrows, enter/esc
+    validations: { required: true }
+
+  - type: textarea
+    id: affected
+    attributes:
+      label: Affected Modules / Files (authoritative map)
+      description: Map of all modules and files this feature will touch or modify.
+      placeholder: |
+        - ui/<area>/*.tsx
+        - src/services/<x>.ts
+        - tests/<x>/*.spec.ts
+    validations: { required: true }
+
+  - type: textarea
+    id: artifacts
+    attributes:
+      label: Design Artifacts & References
+      description: Links to designs, specifications, architecture docs, or other authoritative references.
+      placeholder: |
+        - Design: [Figma link]
+        - Architecture: [diagram/doc]
+        - RFC: [link]
+        - Related PRs/Issues: #xxx, #yyy
+
+  - type: textarea
+    id: segmentation
+    attributes:
+      label: Work Segmentation Plan (Human vs Agent)
+      description: Outline which areas are intended for AI agents vs human maintainers.
+      placeholder: |
+        Agent-suitable:
+        - Service scaffolding
+        - DTOs / mappers
+        - Simple CRUD handlers
+
+        Human-only:
+        - Concurrency / transactions
+        - Security-sensitive flows
+        - Complex migrations / data modeling
+
+  - type: textarea
+    id: open_questions
+    attributes:
+      label: Open Questions
+      description: Capture questions during analysis. When answered, move them under Answered and propagate into other sections/sub-issues.
+      placeholder: |
+        Open Questions:
+        - Q: ...
+
+        Answered:
+        - Q: ...  A: ...
+
+  - type: textarea
+    id: arch_impact
+    attributes:
+      label: Architectural Impact / Data Model Changes
+      description: Note structural changes, schema updates, new modules/services, and any migrations.
+      placeholder: |
+        - New: table article_tags (article_id, tag_id, created_at)
+        - Changes: ArticleService write path adds tagging
+        - Caching: article detail cache includes tags (key shape change)
+        - Migration: create table -> backfill -> switch reads -> drop legacy
+
+  - type: textarea
+    id: nfr
+    attributes:
+      label: Non-Functional Requirements
+      description: Performance, accessibility, security, privacy, and scalability requirements.
+      placeholder: |
+        - P95 end-to-end ≤ 150ms
+        - WCAG 2.1 AA on changed UI
+        - No new deps unless approved
+        - Max database queries per request: N
+
+  - type: textarea
+    id: testing
+    attributes:
+      label: Testing Strategy
+      description: Approach for unit, integration, e2e, and performance testing.
+      placeholder: |
+        - Unit: [coverage %]
+        - Integration: [key scenarios]
+        - E2E: [critical paths]
+        - Performance: [benchmarks]
+        - Security: [OWASP risks to test]
+    validations: { required: true }
+
+  - type: textarea
+    id: risks
+    attributes:
+      label: Known Risks & Mitigations
+      description: Potential issues and how to address them.
+      placeholder: |
+        - Risk: [description]
+          Mitigation: [approach]
+        - Risk: [description]
+          Mitigation: [approach]
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies & Blockers
+      description: Other features, infrastructure, or external dependencies this feature relies on.
+      placeholder: |
+        - Depends on: #123 (database migration)
+        - Blocked by: infra-team/ticket-456 (new service deployment)
+        - External: waiting for third-party API docs
+
+  - type: textarea
+    id: metrics
+    attributes:
+      label: Success Metrics & Observability
+      description: Key metrics and observability signals to validate feature success.
+      placeholder: |
+        - Core metric: [metric_name] should improve by X%
+        - Monitoring: [dashboards, alerts]
+        - Logs: [key events to log]
+        - Analytics: [events to track]
+
+  - type: textarea
+    id: rollout
+    attributes:
+      label: Rollout / Flags / Migration
+      description: Strategy for safely deploying and rolling out this feature.
+      placeholder: |
+        - Flag: <flag_name> default off
+        - Metrics to monitor: latency, error rate, CTR
+        - Migration: expand -> migrate -> contract
+
+  - type: textarea
+    id: rollback
+    attributes:
+      label: Rollback Plan
+      description: How to safely revert this feature if issues arise in production.
+      placeholder: |
+        - Disable flag: <flag_name>
+        - Database: [migration rollback steps]
+        - Cache: [cache invalidation strategy]
+        - Manual steps: [if any]
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria (feature-level only)
+      description: High-level criteria for feature completion. Sub-issues will have their own AC.
+      placeholder: |
+        - [ ] Feature works end-to-end in production
+        - [ ] All sub-issue acceptance criteria met
+        - [ ] Performance benchmarks met
+        - [ ] Documentation updated
+        - [ ] Success metrics validated
+    validations: { required: true }
+
+  - type: textarea
+    id: tasklist
+    attributes:
+      label: Sub-issue Index (tasklist)
+      placeholder: |
+        Draft sub-issues (use [human], [agent], or [tbd]):
+        - [ ] [human] Design DynamoDB schema & GSI strategy
+        - [ ] [agent] Create GraphQL schema & types
+        - [ ] [tbd] Decide pagination model
+        - [ ] [agent] Implement basic CRUD resolvers
+        - [ ] [human] Define access control rules
+
+        After creation, replace with linked issues:
+        - [ ] [human] #123 Design DynamoDB schema & GSI strategy
+        - [ ] [agent] #124 Create GraphQL schema & types

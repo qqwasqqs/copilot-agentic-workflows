@@ -1,0 +1,212 @@
+name: Feature Brief (Main Issue)
+description: Single source of truth for a feature
+title: "Feature: <name>"
+labels: ["enhancement", "feature-brief"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Authoring help
+
+        Fill this in with the project's own architecture documents, instructions,
+        and guardrails as your sources. This form is intentionally
+        technology-neutral: replace the examples with your project's conventions.
+
+        Checklist before submitting:
+        - Contracts use fenced code blocks and list error conditions.
+        - Scope and Out of Scope are both explicit.
+        - Affected modules and files are repository-relative and not overly broad.
+        - Non-functional requirements are measurable.
+        - Open Questions capture every unknown; answered items move under Answered.
+        - Acceptance criteria are 5-8 testable, feature-level checkboxes.
+        - The Sub-Issue Index tags every stub `[human]`, `[agent]`, or `[tbd]`.
+
+        Unknown? Mark it `[tbd]` and log a question instead of guessing.
+
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Rationale & Goals
+      description: Why this matters and what observable success looks like.
+    validations: { required: true }
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope / Out of Scope
+      description: Explicit boundaries that prevent scope creep.
+      placeholder: |
+        In scope:
+        - ...
+        Out of scope:
+        - ...
+    validations: { required: true }
+
+  - type: textarea
+    id: contracts
+    attributes:
+      label: API/UX Contracts (authoritative)
+      description: Operations, payloads, examples, interface states, error behavior.
+      placeholder: |
+        ### API
+        <operation> -> <response shape>
+        Errors: <codes or conditions and their meaning>
+        ### UX
+        States: idle / loading / success / empty / error
+        Accessibility: keyboard and assistive-technology expectations
+    validations: { required: true }
+
+  - type: textarea
+    id: affected
+    attributes:
+      label: Affected Modules / Files (authoritative map)
+      description: Repository-relative paths this feature will touch or add. Avoid broad globs.
+      placeholder: |
+        - <module>/<area>/**
+        - <service>/<file>
+        - tests/<area>/**
+    validations: { required: true }
+
+  - type: textarea
+    id: artifacts
+    attributes:
+      label: Design Artifacts & References
+      description: Durable links to designs, specifications, architecture documents, ADRs, related issues or PRs.
+      placeholder: |
+        - Design: <link>
+        - Architecture: <link>
+        - Related issues/PRs: #..., #...
+
+  - type: textarea
+    id: segmentation
+    attributes:
+      label: Work Segmentation Plan (Human vs Agent)
+      description: High-level split only. Detailed assignment happens in the Sub-Issue Index.
+      placeholder: |
+        Agent-suitable:
+        - Well-specified, low-risk, pattern-following work
+
+        Human-only:
+        - Decisions, risky migrations, security-sensitive flows
+
+  - type: textarea
+    id: open_questions
+    attributes:
+      label: Open Questions
+      description: The canonical question log. Move resolved items under Answered.
+      placeholder: |
+        Open Questions:
+        - Q: ...
+
+        Answered:
+        - Q: ...  A: ...
+
+  - type: textarea
+    id: arch_impact
+    attributes:
+      label: Architectural Impact / Data Model Changes
+      description: New or changed components, schemas, relationships, indexes, caching, migrations.
+      placeholder: |
+        - New: <entity or component> and its purpose
+        - Changed: <component> behavior on the write path
+        - Caching: key shape changes, if any
+        - Migration: expand -> migrate -> contract
+
+  - type: textarea
+    id: nfr
+    attributes:
+      label: Non-Functional Requirements
+      description: Measurable targets for performance, reliability, security, privacy, accessibility, scalability.
+      placeholder: |
+        - P95 end-to-end <= <target>
+        - Accessibility conformance target for changed interfaces
+        - Dependency policy for this change
+
+  - type: textarea
+    id: testing
+    attributes:
+      label: Testing Strategy
+      description: Unit, integration, end-to-end, performance, and security coverage, plus key scenarios.
+      placeholder: |
+        - Unit: <coverage emphasis>
+        - Integration: <key scenarios>
+        - End-to-end: <critical paths>
+        - Performance: <benchmark>
+        - Security: <risks to test>
+    validations: { required: true }
+
+  - type: textarea
+    id: risks
+    attributes:
+      label: Known Risks & Mitigations
+      description: 2-5 realistic risks, each with a concrete mitigation.
+      placeholder: |
+        - Risk: <description>
+          Mitigation: <approach>
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies & Blockers
+      description: Internal and external dependencies and sequencing constraints.
+      placeholder: |
+        - Depends on: #<issue>
+        - Blocked by: <external dependency>
+
+  - type: textarea
+    id: metrics
+    attributes:
+      label: Success Metrics & Observability
+      description: Metrics that validate success and the signals used to observe them.
+      placeholder: |
+        - Core metric: <metric> should move by <amount>
+        - Monitoring: <dashboards, alerts>
+        - Logs and events: <key signals>
+
+  - type: textarea
+    id: rollout
+    attributes:
+      label: Rollout / Flags / Migration
+      description: How this ships safely.
+      placeholder: |
+        - Flag: <flag name>, default off
+        - Staged rollout plan and metrics to watch
+        - Migration: expand -> migrate -> contract
+
+  - type: textarea
+    id: rollback
+    attributes:
+      label: Rollback Plan
+      description: Concrete steps to revert, and any irreversible steps.
+      placeholder: |
+        - Disable flag: <flag name>
+        - Data: <rollback steps>
+        - Manual steps: <if any>
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria (feature-level only)
+      description: 5-8 testable, outcome-focused checkboxes. Sub-issues carry their own criteria.
+      placeholder: |
+        - [ ] Feature works end to end in the target environment
+        - [ ] All sub-issue acceptance criteria are met
+        - [ ] Performance targets are met
+        - [ ] Documentation is updated
+        - [ ] Success metrics are observable
+    validations: { required: true }
+
+  - type: textarea
+    id: tasklist
+    attributes:
+      label: Sub-issue Index (tasklist)
+      description: Atomic stubs tagged [human], [agent], or [tbd]. Replaced with linked issues after decomposition.
+      placeholder: |
+        Draft sub-issues:
+        - [ ] [human] Decide <design decision>
+        - [ ] [agent] Implement <well-specified slice>
+        - [ ] [tbd] Resolve <open decision>
+
+        After creation, replace with linked issues:
+        - [ ] [human] #123 Decide <design decision>
+        - [ ] [agent] #124 Implement <well-specified slice>

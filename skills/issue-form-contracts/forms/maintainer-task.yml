@@ -1,0 +1,48 @@
+name: Maintainer Task
+description: A sub-issue that requires human judgement, design, or elevated risk handling
+title: "[Maintainer] <action> <component> (<area>)"
+labels: ["maintainer", "needs-design"]
+body:
+  - type: input
+    id: main_issue
+    attributes:
+      label: Main Issue Link
+      description: The Feature Brief issue number or URL.
+      placeholder: "#1234"
+    validations: { required: true }
+
+  - type: textarea
+    id: background
+    attributes:
+      label: Background / Rationale
+      description: Why this needs human ownership, and the context and alternatives considered.
+    validations: { required: true }
+
+  - type: textarea
+    id: design
+    attributes:
+      label: Design / Plan
+      description: Interfaces, data model, contracts, risks, rollout.
+      placeholder: |
+        - Approach:
+        - Public interfaces or types:
+        - Data model or migration:
+        - Risks and mitigations:
+        - Rollout and flags:
+    validations: { required: true }
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: Testable, outcome-focused checkboxes specific to this sub-issue.
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations: { required: true }
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes / Follow-ups
+      description: Links to ADRs, diagrams, spikes, or design documents.

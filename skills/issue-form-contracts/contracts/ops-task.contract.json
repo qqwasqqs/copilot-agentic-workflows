@@ -1,0 +1,110 @@
+{
+  "contract_id": "ops-task",
+  "version": "1.0.0",
+  "source": "bundled-default",
+  "origin": "skills/issue-form-contracts/forms/ops-task.yml",
+  "form_name": "Operational Task (Chore)",
+  "title_pattern": "[Ops] <action> <subject> (<area>)",
+  "labels": [
+    "ops",
+    "chore"
+  ],
+  "fields": [
+    {
+      "id": "category",
+      "label": "Category",
+      "type": "dropdown",
+      "required": false,
+      "description": "Pick the closest category.",
+      "options": [
+        "Tooling / Linting",
+        "Local Dev Environment",
+        "Documentation / Guides",
+        "Agent Instructions / Templates",
+        "CI/CD / Automation",
+        "Security / Compliance",
+        "Housekeeping / Cleanup",
+        "Process / Project hygiene",
+        "Other"
+      ]
+    },
+    {
+      "id": "related",
+      "label": "Related Feature / Issue (optional)",
+      "type": "input",
+      "required": false
+    },
+    {
+      "id": "rationale",
+      "label": "Rationale",
+      "type": "textarea",
+      "required": true,
+      "description": "The problem and the expected outcome, not the implementation."
+    },
+    {
+      "id": "scope",
+      "label": "Scope",
+      "type": "textarea",
+      "required": true,
+      "description": "Explicit in-scope and out-of-scope boundaries."
+    },
+    {
+      "id": "steps",
+      "label": "Steps / Plan",
+      "type": "textarea",
+      "required": true,
+      "description": "Concrete checklist. Include explicit validation steps."
+    },
+    {
+      "id": "affected_paths",
+      "label": "Affected Paths",
+      "type": "textarea",
+      "required": false,
+      "description": "Repository-relative paths to change or create. Avoid broad globs."
+    },
+    {
+      "id": "deliverables",
+      "label": "Deliverables",
+      "type": "textarea",
+      "required": false,
+      "description": "Concrete files or outcomes produced."
+    },
+    {
+      "id": "risks",
+      "label": "Risks / Impact",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "rollback",
+      "label": "Backout / Rollback (if needed)",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "acceptance",
+      "label": "Acceptance Criteria",
+      "type": "textarea",
+      "required": true,
+      "description": "3-7 objectively testable checkboxes mapped to the deliverables."
+    },
+    {
+      "id": "links",
+      "label": "References / Links",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "effort",
+      "label": "Estimated Effort",
+      "type": "dropdown",
+      "required": false,
+      "options": [
+        "XS (<= 1h)",
+        "S (<= 1 day)",
+        "M (1-3 days)",
+        "L (> 3 days)"
+      ]
+    }
+  ]
+}

@@ -638,40 +638,47 @@ without the orchestrator, using the same skills and output contracts.
 
 ## 13. Acceptance criteria
 
-- [ ] Current official documentation has been checked and the chosen Copilot app
+- [x] Current official documentation has been checked and the chosen Copilot app
       plugin structure and tool identifiers are documented.
-- [ ] A versioned plugin manifest enables installation across projects.
-- [ ] A discoverable top-level workflow orchestrator exists.
-- [ ] Only the v2 Feature Brief and Sub-Issues planner behavior remains
+- [x] A versioned plugin manifest enables installation across projects.
+- [x] A discoverable top-level workflow orchestrator exists.
+- [x] Only the v2 Feature Brief and Sub-Issues planner behavior remains
       discoverable.
-- [ ] Feature Brief authoring rules are packaged as a reusable skill.
-- [ ] Sub-issue planning and authoring rules are packaged as a reusable skill.
-- [ ] Retained Ops planning rules are packaged as a reusable skill.
-- [ ] Agents accept user-provided architecture, project-instruction, guardrail,
+- [x] Feature Brief authoring rules are packaged as a reusable skill.
+- [x] Sub-issue planning and authoring rules are packaged as a reusable skill.
+- [x] Retained Ops planning rules are packaged as a reusable skill.
+- [x] Agents accept user-provided architecture, project-instruction, guardrail,
       and authoring-guide paths.
-- [ ] The core system has no hard dependency on the source project's backend or
+- [x] The core system has no hard dependency on the source project's backend or
       infrastructure instructions.
-- [ ] Target-repository issue forms take precedence over valid bundled default
+- [x] Target-repository issue forms take precedence over valid bundled default
       contracts when present; this plugin repository does not publish those
       defaults as its own issue forms.
-- [ ] Supervised mode implements clear, non-repetitive checkpoints.
-- [ ] Explicit autonomous mode can run the complete workflow without normal
+- [x] Supervised mode implements clear, non-repetitive checkpoints.
+- [x] Explicit autonomous mode can run the complete workflow without normal
       workflow-level pauses.
-- [ ] Feature Brief issues are rendered and validated against the matching
+- [x] Feature Brief issues are rendered and validated against the matching
       target form, or the bundled fallback contract if absent.
-- [ ] Agent and maintainer sub-issues are rendered and validated against their
+- [x] Agent and maintainer sub-issues are rendered and validated against their
       matching target forms, or bundled fallback contracts if absent.
-- [ ] Every Feature Brief acceptance criterion is traceable to at least one child
+- [x] Every Feature Brief acceptance criterion is traceable to at least one child
       issue or an explicitly documented unresolved item.
-- [ ] Child issues link textually to the Feature Brief and use native GitHub
-      sub-issue relationships when supported.
-- [ ] The Feature Brief task list is updated with created issue links.
-- [ ] Partial GitHub write failures are reported and resumable without duplicate
-      issue creation.
+- [x] Child issues link textually to the Feature Brief and use native GitHub
+      sub-issue relationships when supported. (Implemented; not live-verified.)
+- [x] The Feature Brief task list is updated with created issue links.
+      (Implemented; not live-verified.)
+- [x] Partial GitHub write failures are reported and resumable without duplicate
+      issue creation. (Implemented; not live-verified - see note below.)
 - [ ] The installed plugin's workflow and skills are successfully discovered
       and smoke-tested in the GitHub Copilot app for a target project.
-- [ ] Concise user documentation explains how to run the orchestrator and each
+- [x] Concise user documentation explains how to run the orchestrator and each
       specialist agent.
+
+Items marked *not live-verified* are fully specified and statically validated,
+but no GitHub issue-write tooling or authorized test repository was available in
+the implementation session, so they were never executed against a live
+repository. See `Implementation decisions` for the manual smoke tests that
+close this gap.
 
 ## 14. Expected usage after implementation
 
@@ -754,3 +761,122 @@ when:
    as the available permissions safely allow.
 6. Any platform limitation has a documented fallback that preserves validated
    issue output and an honest failure report.
+
+## 17. Implementation decisions
+
+Recorded during implementation (section 4 required this). Documentation was
+checked against the live GitHub docs at implementation time.
+
+### 17.1 Packaging
+
+Agent Plugins 1.0: root `plugin.json` with
+`$schema: https://agent-plugins.org/schemas/1.0.0/plugin.schema.json`,
+`skills/<name>/SKILL.md`, and `com.github.copilot/agents/*.agent.md`.
+Component paths are **fixed** in 1.0, so the legacy `agents`/`skills` manifest
+fields are deliberately absent; including them would be an unknown top-level
+field, silently ignored, and would suggest a layout the runtime does not use.
+`scripts/validate_plugin.py` fails the build if one reappears.
+
+### 17.2 Agent frontmatter
+
+`description` is the only required property. Dropped from the staged profiles:
+
+- `handoffs` - a VS Code concept, ignored on GitHub. Orchestration is expressed
+  in prose plus the `agent` tool instead, so the orchestrator degrades to doing
+  the work itself when subagent delegation is unavailable.
+- `argument-hint` - ignored on GitHub.
+- `infer` - retired.
+
+The validator treats all three as errors so they cannot creep back.
+
+### 17.3 `include-custom-instructions` is left unset
+
+Enabling it would make the target repository's custom instructions
+automatically authoritative, which contradicts section 5.2: the user's supplied
+sources take precedence, and repository conventions are read explicitly and
+cited. Agents read those files as ordinary sources instead.
+
+### 17.4 Tool identifiers
+
+The staged profiles' historical identifiers
+(`github/github-mcp-server/issue_write`, `runSubagent`,
+`github.vscode-pull-request-github/issue_fetch`) are not used. Current GitHub
+MCP identifiers are `issue_read`, `issue_write`, `sub_issue_write`, `get_label`,
+`search_issues`, and `list_issues`. `issue_write` with `create` accepts
+`parent_issue_number`, which creates and attaches a sub-issue in one call and is
+the preferred path.
+
+Agents grant the aliases `read, search, web, todo, agent, execute` plus both
+`github/*` and `github-mcp-server/*`, because the server's registered name
+varies by host and unrecognized tool names are silently ignored. A documented
+`gh` fallback covers hosts with no MCP server at all;
+`feature-documentation-author` is read-only and is granted neither `execute` nor
+`edit`.
+
+**Sub-issue gotcha:** the REST `sub_issues` endpoint takes `sub_issue_id`, the
+child's numeric database id - not its issue number, and not the GraphQL node id
+that `gh issue view --json id` returns.
+
+### 17.5 Agent disposition
+
+- v1 planners: never imported.
+- Ops planner: retained, generalized, backed by `ops-issue-authoring`.
+- Documentation agent: retained with a real `name`/`description`, deliberately
+  self-contained with no skill, because its workflow is not reused elsewhere
+  (permitted by section 5.4).
+- Generic coding agent: dropped as redundant with the built-in implementation
+  agent.
+
+### 17.6 Rule ownership
+
+Skills are the single canonical home of every normative rule. `migration/`
+stays an unmodified historical input and is excluded from all discoverable
+component directories; the validator asserts this. Rules were generalized -
+the misspelled `enhacement` label, the placeholder assignee, and every
+AWS/DynamoDB/GraphQL/`AGENTS.md`/constitution reference were removed.
+
+### 17.7 Issue forms and validation
+
+Issue forms cannot be selected through the API, so bodies are rendered as
+`### <field label>` blocks matching GitHub's own rendering of a submitted form.
+Contracts are generated from the bundled YAML forms so the two cannot drift, and
+the render path is standard-library only; PyYAML is needed only to extract a
+contract from a target repository's form, with a documented manual fallback.
+A field id absent from the contract is an error, not a warning, because its
+content would otherwise be dropped silently.
+
+`allowed-tools` is intentionally omitted from the skills so Copilot prompts
+before running the bundled script; every skill documents a manual-validation
+fallback for when shell access is denied.
+
+### 17.8 Validation performed
+
+- `scripts/validate_plugin.py` - 184 checks, 0 errors, 0 warnings: manifest
+  schema and name rules, no legacy fields, agent and skill frontmatter, skill
+  name/directory agreement, prompt size limit, every relative link, every
+  referenced skill exists, contract provenance and origin resolution,
+  contract/form pairing, no `.github/ISSUE_TEMPLATE/`, no obsolete agent.
+- `scripts/smoke-test.sh` - 15 assertions: six deliberately broken copies of
+  the plugin prove the validator actually fails, four contracts render valid
+  bodies, and missing-required-field, unresolved-`[tbd]` and unknown-field-id
+  inputs are all rejected; contracts confirmed to match their forms.
+
+### 17.9 Not verified, and how to close the gap
+
+No GitHub issue-write tooling and no authorized test repository were available
+in the implementation session, and plugin discovery inside the Copilot app is
+not machine-verifiable from a folder session. These remain manual smoke tests:
+
+1. Install the plugin and confirm all five agents and five skills are listed.
+2. In a scratch repository, run the orchestrator supervised end to end and
+   confirm the checkpoints, the created parent issue, the linked children, the
+   native sub-issue relationships, and the updated parent task list.
+3. Repeat with an explicit autonomous instruction and review the audit trail.
+4. Interrupt a run mid-creation, then resume it and confirm no duplicate issues
+   are created.
+5. Repeat step 2 in a repository that has its own feature/task issue forms, and
+   confirm those forms - not the bundled defaults - governed the bodies.
+
+Fallback if an MCP issue tool is unavailable: the `gh` commands in
+`skills/github-issue-operations/references/github-cli-fallback.md` perform the
+same operations, including the numeric-id lookup for sub-issue linking.

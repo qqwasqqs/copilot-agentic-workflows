@@ -1,0 +1,49 @@
+{
+  "contract_id": "maintainer-task",
+  "version": "1.0.0",
+  "source": "bundled-default",
+  "origin": "skills/issue-form-contracts/forms/maintainer-task.yml",
+  "form_name": "Maintainer Task",
+  "title_pattern": "[Maintainer] <action> <component> (<area>)",
+  "labels": [
+    "maintainer",
+    "needs-design"
+  ],
+  "fields": [
+    {
+      "id": "main_issue",
+      "label": "Main Issue Link",
+      "type": "input",
+      "required": true,
+      "description": "The Feature Brief issue number or URL."
+    },
+    {
+      "id": "background",
+      "label": "Background / Rationale",
+      "type": "textarea",
+      "required": true,
+      "description": "Why this needs human ownership, and the context and alternatives considered."
+    },
+    {
+      "id": "design",
+      "label": "Design / Plan",
+      "type": "textarea",
+      "required": true,
+      "description": "Interfaces, data model, contracts, risks, rollout."
+    },
+    {
+      "id": "acceptance",
+      "label": "Acceptance Criteria",
+      "type": "textarea",
+      "required": true,
+      "description": "Testable, outcome-focused checkboxes specific to this sub-issue."
+    },
+    {
+      "id": "notes",
+      "label": "Notes / Follow-ups",
+      "type": "textarea",
+      "required": false,
+      "description": "Links to ADRs, diagrams, spikes, or design documents."
+    }
+  ]
+}

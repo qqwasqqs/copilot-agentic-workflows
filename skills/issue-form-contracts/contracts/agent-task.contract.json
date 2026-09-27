@@ -1,0 +1,142 @@
+{
+  "contract_id": "agent-task",
+  "version": "1.0.0",
+  "source": "bundled-default",
+  "origin": "skills/issue-form-contracts/forms/agent-task.yml",
+  "form_name": "Agent Task (Atomic)",
+  "title_pattern": "[Atomic] <action> <object> (<area>)",
+  "labels": [
+    "agent",
+    "atomic"
+  ],
+  "fields": [
+    {
+      "id": "main_issue",
+      "label": "Main Issue Link",
+      "type": "input",
+      "required": true,
+      "description": "The Feature Brief issue number or URL."
+    },
+    {
+      "id": "context",
+      "label": "Context / Links",
+      "type": "textarea",
+      "required": true,
+      "description": "Exact sections of the Feature Brief plus the project guardrails that apply."
+    },
+    {
+      "id": "affected_paths",
+      "label": "Affected Paths (Scope Gate)",
+      "type": "textarea",
+      "required": true,
+      "description": "Paths that may be modified versus read for context only. Ask before going outside Modify."
+    },
+    {
+      "id": "files_symbols",
+      "label": "Files / Symbols to Touch (Authoritative)",
+      "type": "textarea",
+      "required": true,
+      "description": "Every file with an action, plus the symbols to add or change. Ask before exceeding this list."
+    },
+    {
+      "id": "allowed_forbidden",
+      "label": "Allowed vs Forbidden Changes",
+      "type": "textarea",
+      "required": true,
+      "description": "Limit the blast radius explicitly."
+    },
+    {
+      "id": "contracts_alignment",
+      "label": "Contracts to Honor",
+      "type": "textarea",
+      "required": true,
+      "description": "Type names, error semantics, pagination, authorization expectations taken from the Feature Brief."
+    },
+    {
+      "id": "objective",
+      "label": "Objective (Definition of Done)",
+      "type": "textarea",
+      "required": true,
+      "description": "3-6 testable, observable checkboxes."
+    },
+    {
+      "id": "technical",
+      "label": "Technical Details",
+      "type": "textarea",
+      "required": true,
+      "description": "Hard constraints and intentional side effects."
+    },
+    {
+      "id": "observability",
+      "label": "Observability Hooks",
+      "type": "textarea",
+      "required": true,
+      "description": "Logging, metrics, and tracing to add or update. No sensitive data."
+    },
+    {
+      "id": "dependencies",
+      "label": "Depends On / Blocks",
+      "type": "textarea",
+      "required": false,
+      "description": "Sub-issues that must precede this one or that it unblocks."
+    },
+    {
+      "id": "test_data",
+      "label": "Test Data & Verification Steps",
+      "type": "textarea",
+      "required": true,
+      "description": "Fixtures, exact commands, and expected results."
+    },
+    {
+      "id": "diff_size",
+      "label": "Expected Diff Size",
+      "type": "dropdown",
+      "required": false,
+      "description": "Keep atomic; prefer Small.",
+      "options": [
+        "Small (<= 80 lines)",
+        "Medium (81-200 lines)",
+        "Large (> 200 lines; requires prior plan approval)"
+      ]
+    },
+    {
+      "id": "pr_boundaries",
+      "label": "PR Boundaries",
+      "type": "textarea",
+      "required": false,
+      "description": "What the pull request will and will not contain."
+    },
+    {
+      "id": "security_privacy",
+      "label": "Security / Privacy Checks",
+      "type": "textarea",
+      "required": false,
+      "description": "Acknowledge the critical guardrails for this change."
+    },
+    {
+      "id": "rollout_nature",
+      "label": "Roll-forward Nature",
+      "type": "dropdown",
+      "required": false,
+      "description": "Clarifies whether rollback planning is required.",
+      "options": [
+        "Additive (roll-forward only)",
+        "Migration (needs rollback plan)",
+        "Risky (extra review required)"
+      ]
+    },
+    {
+      "id": "tests",
+      "label": "Tests & Validation",
+      "type": "textarea",
+      "required": true,
+      "description": "What must be covered and how success is verified."
+    },
+    {
+      "id": "agent_instructions",
+      "label": "Agent Instructions",
+      "type": "textarea",
+      "required": false
+    }
+  ]
+}

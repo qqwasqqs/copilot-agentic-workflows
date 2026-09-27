@@ -1,0 +1,21 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "agentic-feature-workflow",
+  "version": "1.0.0",
+  "description": "Repository-agnostic feature planning for GitHub Copilot: a workflow orchestrator, Feature Brief and Sub-Issues planner agents, and reusable issue-authoring skills with bundled default issue-form contracts.",
+  "author": {
+    "name": "qqwasqqs",
+    "url": "https://github.com/qqwasqqs"
+  },
+  "homepage": "https://github.com/qqwasqqs/copilot-agentic-workflows",
+  "repository": "https://github.com/qqwasqqs/copilot-agentic-workflows",
+  "license": "MIT",
+  "keywords": [
+    "planning",
+    "feature-brief",
+    "github-issues",
+    "sub-issues",
+    "decomposition",
+    "workflow"
+  ]
+}

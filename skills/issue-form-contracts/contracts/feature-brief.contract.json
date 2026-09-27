@@ -1,0 +1,133 @@
+{
+  "contract_id": "feature-brief",
+  "version": "1.0.0",
+  "source": "bundled-default",
+  "origin": "skills/issue-form-contracts/forms/feature-brief.yml",
+  "form_name": "Feature Brief (Main Issue)",
+  "title_pattern": "Feature: <name>",
+  "labels": [
+    "enhancement",
+    "feature-brief"
+  ],
+  "fields": [
+    {
+      "id": "rationale",
+      "label": "Rationale & Goals",
+      "type": "textarea",
+      "required": true,
+      "description": "Why this matters and what observable success looks like."
+    },
+    {
+      "id": "scope",
+      "label": "Scope / Out of Scope",
+      "type": "textarea",
+      "required": true,
+      "description": "Explicit boundaries that prevent scope creep."
+    },
+    {
+      "id": "contracts",
+      "label": "API/UX Contracts (authoritative)",
+      "type": "textarea",
+      "required": true,
+      "description": "Operations, payloads, examples, interface states, error behavior."
+    },
+    {
+      "id": "affected",
+      "label": "Affected Modules / Files (authoritative map)",
+      "type": "textarea",
+      "required": true,
+      "description": "Repository-relative paths this feature will touch or add. Avoid broad globs."
+    },
+    {
+      "id": "artifacts",
+      "label": "Design Artifacts & References",
+      "type": "textarea",
+      "required": false,
+      "description": "Durable links to designs, specifications, architecture documents, ADRs, related issues or PRs."
+    },
+    {
+      "id": "segmentation",
+      "label": "Work Segmentation Plan (Human vs Agent)",
+      "type": "textarea",
+      "required": false,
+      "description": "High-level split only. Detailed assignment happens in the Sub-Issue Index."
+    },
+    {
+      "id": "open_questions",
+      "label": "Open Questions",
+      "type": "textarea",
+      "required": false,
+      "description": "The canonical question log. Move resolved items under Answered."
+    },
+    {
+      "id": "arch_impact",
+      "label": "Architectural Impact / Data Model Changes",
+      "type": "textarea",
+      "required": false,
+      "description": "New or changed components, schemas, relationships, indexes, caching, migrations."
+    },
+    {
+      "id": "nfr",
+      "label": "Non-Functional Requirements",
+      "type": "textarea",
+      "required": false,
+      "description": "Measurable targets for performance, reliability, security, privacy, accessibility, scalability."
+    },
+    {
+      "id": "testing",
+      "label": "Testing Strategy",
+      "type": "textarea",
+      "required": true,
+      "description": "Unit, integration, end-to-end, performance, and security coverage, plus key scenarios."
+    },
+    {
+      "id": "risks",
+      "label": "Known Risks & Mitigations",
+      "type": "textarea",
+      "required": false,
+      "description": "2-5 realistic risks, each with a concrete mitigation."
+    },
+    {
+      "id": "dependencies",
+      "label": "Dependencies & Blockers",
+      "type": "textarea",
+      "required": false,
+      "description": "Internal and external dependencies and sequencing constraints."
+    },
+    {
+      "id": "metrics",
+      "label": "Success Metrics & Observability",
+      "type": "textarea",
+      "required": false,
+      "description": "Metrics that validate success and the signals used to observe them."
+    },
+    {
+      "id": "rollout",
+      "label": "Rollout / Flags / Migration",
+      "type": "textarea",
+      "required": false,
+      "description": "How this ships safely."
+    },
+    {
+      "id": "rollback",
+      "label": "Rollback Plan",
+      "type": "textarea",
+      "required": false,
+      "description": "Concrete steps to revert, and any irreversible steps."
+    },
+    {
+      "id": "acceptance",
+      "label": "Acceptance Criteria (feature-level only)",
+      "type": "textarea",
+      "required": true,
+      "description": "5-8 testable, outcome-focused checkboxes. Sub-issues carry their own criteria."
+    },
+    {
+      "id": "tasklist",
+      "label": "Sub-issue Index (tasklist)",
+      "type": "textarea",
+      "required": false,
+      "description": "Atomic stubs tagged [human], [agent], or [tbd]. Replaced with linked issues after decomposition."
+    }
+  ]
+}
